@@ -17,15 +17,23 @@ class InvoiceController extends Controller
     }
     public function store(Request $request)
     {
-        // request()->validate([
-        //     'qty'=>'required|numeric',
-        //     'name'=>'required|alpha',
-        //     'image' => 'file|mimes:pdf,jpg,png|max:3072'
-        // ]);
-        //dd($request->file('image'));
-
+        $validator = Validator::make($request->all(), [
+            'qty' => 'required|numeric',
+            'name' => 'required|alpha',
+            'image' => 'file|mimes:pdf,jpg,png|max:3072'
+        ], [
+            'qty.required' => 'Quantity is required.',
+            'qty.numeric' => 'Quantity must be a numeric value.',
+            'name.required' => 'Name is required.',
+            'name.alpha' => 'Name must contain only alphabetic characters.',
+            'image.file' => 'Invalid file format for the image.',
+            'image.mimes' => 'Only PDF, JPG, and PNG files are allowed for the image.',
+            'image.max' => 'The image size must not exceed 3 MB.',
+        ]);   
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
         if ($request->hasFile('image')) {
-            // dd($request->file('image'));
             $file = $request->file('image');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads'), $fileName);
@@ -38,7 +46,9 @@ class InvoiceController extends Controller
             $invoice->total = $request->total;
             $invoice->tax = $request->tax;
             $invoice->net_amount = $request->net_amount;
-            $invoice->img_name = $request->image;
+            if($request->hasFile('image')){
+                $invoice->img_name = $fileName;
+            }
             $invoice->created_at = $request->idate;
             $invoice->save();
             return response()->json($invoice);
@@ -50,12 +60,12 @@ class InvoiceController extends Controller
                 'total' => $request->total,
                 'tax' => $request->tax,
                 'net_amount' => $request->net_amount,
-                'img_name' => $request->image,
+                'img_name' => $fileName,
                 'created_at' => $request->idate
             ]);
-        return response()->json($invoice);
+            return response()->json($invoice);
+        }
     }
-}
 
     public function destroy(Invoice $inv)
     {
