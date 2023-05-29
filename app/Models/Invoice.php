@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
-    protected $guarded = [];
-    protected $fillable = ['amount','total','tax','net_amount','img_name','name'];
-    use HasFactory;
+    protected $fillable = ['name', 'qty', 'amount', 'total', 'tax', 'net_amount', 'img_name', 'created_at'];
+
+    protected $primaryKey = 'id'; // Assuming 'id' is the primary key column name
+
+    protected $table = 'invoices'; // Assuming 'invoices' is the table name
+
+    public $timestamps = false; 
+        use HasFactory;
 }

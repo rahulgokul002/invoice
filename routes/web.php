@@ -23,7 +23,7 @@ Route::get('/', function () {
 Route::get('/invoice','InvoiceController@index');
 Route::get('/dashboard','InvoiceController@index')->middleware(['auth'])->name('dashboard');
 Route::get('/invoice/{inv}/edit', 'InvoiceController@edit');
-Route::post('/invoice/store', 'InvoiceController@store');
+Route::post('/invoice', 'InvoiceController@store');
 Route::delete('invoice/destroy/{inv}', 'InvoiceController@destroy');
 
 require __DIR__.'/auth.php';

@@ -17,11 +17,11 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->integer('qty')->nullable();
-            $table->integer('amount');
-            $table->integer('total');
-            $table->integer('tax');
-            $table->integer('net_amount');
-            $table->string('img_name');
+            $table->integer('amount')->nullable();
+            $table->integer('total')->nullable();
+            $table->integer('tax')->nullable();
+            $table->integer('net_amount')->nullable();
+            $table->string('img_name')->nullable();
             $table->timestamps();
         });
     }
